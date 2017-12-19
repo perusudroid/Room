@@ -80,11 +80,12 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesView
 
     @Override
     public void onBindViewHolder(DishesViewHolder holder, int position) {
-        Data myData = oldData.get(position);
-        Log.d(TAG, "onBindViewHolder: " + myData.getDish_pic());
-        holder.inflaterDishBinding.setDishInflaterData(myData);
+        Log.d(TAG, "onBindViewHolder: "+ position);
+//        Data myData = oldData.get(position);
+//        Log.d(TAG, "onBindViewHolder: " + myData.getDish_pic());
+        holder.inflaterDishBinding.setDishInflaterData(oldData.get(position));
         holder.inflaterDishBinding.executePendingBindings();
-        holder.itemView.setTag(myData);
+        //holder.itemView.setTag(myData);
     }
 
     @Override
