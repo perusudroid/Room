@@ -1,0 +1,122 @@
+apply plugin: 'com.android.application'
+
+
+android {
+    compileSdkVersion build_versions.target_sdk
+    buildToolsVersion build_versions.build_tools
+
+    defaultConfig {
+        applicationId "com.perusudroid.roomlocal"
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dataBinding.enabled = true
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/rxjava.properties'
+        exclude 'META-INF/ASL2.0'
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+}
+
+dependencies {
+    // Support libraries
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:appcompat-v7:26.0.0-beta1'
+    compile deps.support.app_compat
+    compile deps.support.v4
+    compile deps.support.design
+    // Architecture components
+    compile deps.lifecycle.runtime
+    compile deps.lifecycle.extensions
+    annotationProcessor deps.lifecycle.compiler
+    compile deps.room.runtime
+    annotationProcessor deps.room.compiler
+    compile deps.room.rxjava2
+
+    // RxJava
+    //compile deps.rx_android
+    //compile deps.rxjava2
+    compile deps.io_rxjava
+    compile deps.io_rx_android
+
+    compile 'io.reactivex.rxjava2:rxjava:2.0.0'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.0'
+
+    //retrofit.gson
+    compile deps.retrofit.runtime
+    compile deps.retrofit.gson
+    compile deps.retrofit.logInterceptor
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
+
+    //picasso
+    compile 'com.github.florent37:picassopalette:2.0.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile deps.glide
+
+    //maps
+    compile 'com.google.android.gms:play-services-maps:11.4.2'
+    compile "com.google.android.gms:play-services-auth:11.4.2"
+    compile 'com.google.android.gms:play-services-location:11.4.2'
+
+    //dagger
+/*    compile deps.dagger.android
+    annotationProcessor deps.dagger.compiler*/
+
+    //recycler and card view
+    compile deps.support.recyclerview
+    compile deps.support.cardview
+
+    // Dependencies for local unit tests
+    testCompile deps.junit
+    testCompile deps.hamcrest
+    testCompile deps.arch_core.testing
+    testCompile deps.mockito.all
+
+    // Resolve conflicts between main and local unit tests
+    testCompile deps.support.annotations
+    testCompile deps.support.core_utils
+
+    // Android Testing Support Library's runner and rules
+    androidTestCompile deps.atsl.runner
+    androidTestCompile deps.atsl.rules
+    androidTestCompile deps.room.testing
+    androidTestCompile deps.arch_core.testing
+
+    // Dependencies for Android unit tests
+    androidTestCompile deps.junit
+    androidTestCompile deps.mockito.core, { exclude group: 'net.bytebuddy' }
+    androidTestCompile deps.dexmaker
+
+    // Espresso UI Testing
+    androidTestCompile deps.espresso.core
+    androidTestCompile deps.espresso.contrib
+    androidTestCompile deps.espresso.intents
+
+    // Resolve conflicts between main and test APK:
+    androidTestCompile deps.support.annotations
+    androidTestCompile deps.support.v4
+    androidTestCompile deps.support.app_compat
+    androidTestCompile deps.support.design
+}
