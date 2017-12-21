@@ -2,6 +2,7 @@ package com.perusudroid.roomlocal.presenter;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.perusudroid.roomlocal.dao.UserDaoModel;
 import com.perusudroid.roomlocal.dao.UserModel;
@@ -30,6 +31,7 @@ public class MainPresenter extends BasePresenter implements IMainPresenter, IRes
 
     private IMainView iMainView;
     private UserDaoModel userDaoModel;
+    private List<Data> data = new ArrayList<>();
     private ArrayList<ObservableUser> observeList;
 
     private final CompositeDisposable mDisposable = new CompositeDisposable();
@@ -46,7 +48,9 @@ public class MainPresenter extends BasePresenter implements IMainPresenter, IRes
     public void onCreatePresenter(Bundle bundle) {
         if (!iMainView.getCodeSnippet().hasNetworkConnection()) {
             doGetLocalDB();
+            iMainView.showToast("No network - Showing local db");
         } else {
+            iMainView.showToast("Has network - Api call");
             doNetworkOperations();
         }
 
@@ -61,7 +65,6 @@ public class MainPresenter extends BasePresenter implements IMainPresenter, IRes
     @Override
     public void onStopPresenter() {
         super.onStopPresenter();
-        // clear all the subscriptions
         mDisposable.clear();
     }
 
@@ -71,25 +74,19 @@ public class MainPresenter extends BasePresenter implements IMainPresenter, IRes
 
 
     private void doGetLocalDB() {
+        data.clear();
         mDisposable.add(userDaoModel.getAllUsers()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         UsersfromDb -> {
-                            Log.d(TAG, "onStart: " + UsersfromDb.size());
-                            if (UsersfromDb.size() > 0) {
 
+                            if (UsersfromDb.size() > 0) {
                                 observeList = new ArrayList<>();
                                 for (int i = 0; i < UsersfromDb.size(); i++) {
                                     observeList.add(new ObservableUser());
-                                    Log.d(TAG, "onStartPresenter: " + UsersfromDb.get(i).getDish_name());
-
-                                    List<Data> data = new ArrayList<>();
-
                                     Shop_location shop_location = new Shop_location(UsersfromDb.get(i).getLat(), UsersfromDb.get(i).getLng());
-
                                     data.add(new Data(UsersfromDb.get(i).getDish_id(), UsersfromDb.get(i).getDish_expiration(), shop_location, UsersfromDb.get(i).getDish_name(), UsersfromDb.get(i).getShop_name(), UsersfromDb.get(i).getShop_address(), UsersfromDb.get(i).getShop_detail_address(), UsersfromDb.get(i).getDish_pic()));
-
                                     iMainView.refreshRecyclerData(data);
 
                                 }
@@ -103,19 +100,19 @@ public class MainPresenter extends BasePresenter implements IMainPresenter, IRes
 
     @Override
     public void onFailureApi(Throwable t, int paramInt) {
-        Log.
-                d(TAG, "onFailureApi: ");
+        iMainView.showToast(t.getLocalizedMessage() + " Showing local DB");
+        doGetLocalDB();
     }
 
     @Override
     public void onSuccessfulApi(String str, int type) {
-        Log.d(TAG, "onSuccessfulApi: ");
+
+        data.clear();
 
         DishInfoResponse dishes = iMainView.getGson().fromJson(str, DishInfoResponse.class);
         UserModel[] users = new UserModel[dishes.getData().size()];
 
         for (int i = 0; i < users.length; i++) {
-
 
             UserModel user =
                     new UserModel(dishes.getData().get(i).getDish_id(),
@@ -135,11 +132,6 @@ public class MainPresenter extends BasePresenter implements IMainPresenter, IRes
                             dishes.getData().get(i).getDish_pic()
                     );
             users[i] = user;
-            Log.d(TAG, "onSuccessfulApi: " + user);
-        }
-
-        for (int i = 0; i < users.length; i++) {
-            Log.d(TAG, "onSuccessfulApi: data" + users[i].getDish_pic());
         }
 
 
@@ -156,11 +148,6 @@ public class MainPresenter extends BasePresenter implements IMainPresenter, IRes
                                 observeList = new ArrayList<>();
                                 for (int i = 0; i < UsersfromDb.size(); i++) {
                                     observeList.add(new ObservableUser());
-                                    Log.d(TAG, "onStartPresenter: " + UsersfromDb.get(i).getDish_name());
-
-                                    List<Data> data = new ArrayList<>();
-
-                                    Log.d(TAG, "UsersfromDb: " + UsersfromDb.get(i).getDish_pic());
 
                                     Shop_location shop_location = new Shop_location(UsersfromDb.get(i).getLat(), UsersfromDb.get(i).getLng());
 

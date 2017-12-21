@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.perusudroid.roomlocal.R;
@@ -46,7 +47,7 @@ public class BaseActivity extends AppCompatActivity implements IView {
 
     @Override
     public void showToast(String msg) {
-
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

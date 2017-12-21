@@ -12,6 +12,7 @@ import com.perusudroid.roomlocal.R;
 import com.perusudroid.roomlocal.adapter.listener.DishCallback;
 import com.perusudroid.roomlocal.databinding.InflaterDishBinding;
 import com.perusudroid.roomlocal.model.dto.response.Data;
+import com.perusudroid.roomlocal.view.activity.MainActivity;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,10 +28,15 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesView
         this.dishCallback = dishCallback;
     }
 
+    public DishesAdapter(List<Data> newData, DishCallback dishCallback) {
+        this.oldData = newData;
+        this.dishCallback = dishCallback;
+    }
+
     public void setDishList(final List<Data> newData) {
 
         for (int i = 0; i < newData.size(); i++) {
-            Log.d(TAG, "setDishList: "+ newData.get(i).getDish_pic());
+            Log.d(TAG, "setDishList: " + newData.get(0));
         }
 
         if (oldData == null) {
@@ -80,12 +86,11 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesView
 
     @Override
     public void onBindViewHolder(DishesViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: "+ position);
-//        Data myData = oldData.get(position);
-//        Log.d(TAG, "onBindViewHolder: " + myData.getDish_pic());
-        holder.inflaterDishBinding.setDishInflaterData(oldData.get(position));
+        Data myData = oldData.get(position);
+        Log.d(TAG, "onBindViewHolder: " + myData.getDish_pic());
+        holder.inflaterDishBinding.setDishInflaterData(myData);
         holder.inflaterDishBinding.executePendingBindings();
-        //holder.itemView.setTag(myData);
+        holder.itemView.setTag(myData);
     }
 
     @Override

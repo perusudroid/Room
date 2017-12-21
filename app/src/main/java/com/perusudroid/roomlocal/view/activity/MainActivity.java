@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -23,8 +22,12 @@ import com.perusudroid.roomlocal.presenter.MainPresenter;
 import com.perusudroid.roomlocal.presenter.ipresenter.IMainPresenter;
 import com.perusudroid.roomlocal.view.iview.IMainView;
 
-import java.util.ArrayList;
 import java.util.List;
+
+
+/**
+ * Created by perusu on 21/11/17.
+ */
 
 public class MainActivity extends BaseActivity implements IMainView, DishCallback {
 
@@ -43,16 +46,19 @@ public class MainActivity extends BaseActivity implements IMainView, DishCallbac
         activityLaunchBinding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_launch);
         setToolbar();
         setAssets();
-
-        mViewModelFactory = InjectDB.provideViewModelFactory(this);
-        userDaoModel = ViewModelProviders.of(this, mViewModelFactory).get(UserDaoModel.class);
+        configureRoom();
         iMainPresenter = new MainPresenter(this, userDaoModel);
         iMainPresenter.onCreatePresenter(getIntent().getExtras());
     }
 
+    private void configureRoom() {
+        mViewModelFactory = InjectDB.provideViewModelFactory(this);
+        userDaoModel = ViewModelProviders.of(this, mViewModelFactory).get(UserDaoModel.class);
+    }
+
 
     private void setAssets() {
-        activityLaunchBinding.inflate(getLayoutInflater());
+        ActivityLaunchBinding.inflate(getLayoutInflater());
         activityLaunchBinding.rv.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         dishesAdapter = new DishesAdapter(this);
         activityLaunchBinding.rv.recyclerView.setAdapter(dishesAdapter);
@@ -119,24 +125,8 @@ public class MainActivity extends BaseActivity implements IMainView, DishCallbac
         if(activityLaunchBinding.rv.swipeRefreshLay.isRefreshing()){
             activityLaunchBinding.rv.swipeRefreshLay.setRefreshing(false);
         }
-
-        if(dishesAdapter != null){
-            dishesAdapter.setDishList(newData);
-        }
-    }
-/*
-
-    private void loadSampleData() {
-
-        List<Data> data = new ArrayList<>();
-
-        data.add(new Data(1,"Dec 15,2017","latlng","Pepper Chicken","Fudbowl","Rs Puram, Coimbatore","pics/pizza.png" ));
-        data.add(new Data(2,"Dec 27,2017","latlng","Ginger Chicken","House of Pizzas","Saibaba colony, Coimbatore" ,"pics/pizza.png"));
-
-        dishesAdapter = new DishesAdapter(data, this);
+        dishesAdapter = new DishesAdapter(newData, this);
         activityLaunchBinding.rv.recyclerView.setAdapter(dishesAdapter);
     }
-*/
-
 
 }

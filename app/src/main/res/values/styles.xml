@@ -23,6 +23,11 @@
         <item name="rippleColor">@android:color/white</item>
     </style>
 
+    <style name="AppToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+    </style>
+
 
     <style name="AppTheme.AppBarOverlay" parent="BaseTheme" />
 

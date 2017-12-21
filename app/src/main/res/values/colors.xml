@@ -7,4 +7,5 @@
     <color name="activity_background">#EEEEEE</color>
     <color name="viewColor">#3000</color>
     <color name="selectableBackground">#687a81</color>
+    <color name="grey_primary">#616161</color>
 </resources>
