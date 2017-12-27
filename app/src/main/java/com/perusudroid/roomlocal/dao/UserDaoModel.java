@@ -45,7 +45,7 @@ public class UserDaoModel extends ViewModel {
 
 
     /**
-     * Get the user name of the user.
+     * Get all users from db
      *
      * @return a {@link Flowable} that will emit every time the user name has been updated.
      */
@@ -55,12 +55,24 @@ public class UserDaoModel extends ViewModel {
     }
 
 
+    /**
+     * Get users based on ID
+     *
+     * @return a {@link Flowable} that will emit every time the user name has been updated.
+     */
+
     public Flowable<List<UserModel>> getUsersById(String dish_id) {
 
         return mIUserDataSource.getUserByDishId(dish_id);
     }
 
 
+
+    /**
+     * @param user - Insert UserModel class directly
+     *
+     * @return a {@link Completable} that completes when the user name is updated
+     */
 
     public Completable inserUser(final UserModel... user) {
         return new CompletableFromAction(() -> {
@@ -70,6 +82,11 @@ public class UserDaoModel extends ViewModel {
     }
 
 
+    /**
+     *
+     * @return a {@link Completable}
+     */
+
 
     public Completable deleteAll() {
         return new CompletableFromAction(() -> {
@@ -78,23 +95,5 @@ public class UserDaoModel extends ViewModel {
         });
     }
 
-  /*  *//**
-     * Update the user name.
-     *
-     * @param userName the new user name
-     * @return a {@link Completable} that completes when the user name is updated
-     *//*
-    public Completable updateUserName(final String userName) {
-        return new CompletableFromAction(() -> {
-            // if there's no use, create a new user.
-            // if we already have a user, then, since the user object is immutable,
-            // create a new user, with the id of the previous user and the updated user name.
-            mUserModel = mUserModel == null
-                    ? new UserModel(userName)
-                    : new UserModel(mUserModel.get_id(), userName);
-
-            mIUserDataSource.insertOrUpdateUser(mUserModel);
-        });
-    }*/
 
 }
