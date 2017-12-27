@@ -31,6 +31,7 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity implements IMainView, DishCallback {
 
+
     private ActivityLaunchBinding activityLaunchBinding;
     private IMainPresenter iMainPresenter;
     private ViewModelFactory mViewModelFactory;
@@ -43,10 +44,13 @@ public class MainActivity extends BaseActivity implements IMainView, DishCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //inflating layout with DataBindingUtil
         activityLaunchBinding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_launch);
+        //bindViews(); - not needed as we use DataBinding
         setToolbar();
         setAssets();
         configureRoom();
+        //initializing presenter
         iMainPresenter = new MainPresenter(this, userDaoModel);
         iMainPresenter.onCreatePresenter(getIntent().getExtras());
     }
@@ -58,9 +62,9 @@ public class MainActivity extends BaseActivity implements IMainView, DishCallbac
 
 
     private void setAssets() {
+        //getting layout included in main layout
         ActivityLaunchBinding.inflate(getLayoutInflater());
         activityLaunchBinding.rv.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        dishesAdapter = new DishesAdapter(this);
         activityLaunchBinding.rv.recyclerView.setAdapter(dishesAdapter);
         activityLaunchBinding.rv.swipeRefreshLay.setOnRefreshListener(
                 () -> iMainPresenter.doFetchApiData()
@@ -78,11 +82,21 @@ public class MainActivity extends BaseActivity implements IMainView, DishCallbac
         activityLaunchBinding.rv.recyclerView.scheduleLayoutAnimation();
     }
 
+    /**
+     *
+     * @param data - Data class will be send onClick :- Used for sample
+     */
 
     @Override
     public void onClick(Data data) {
 
     }
+
+    /**
+     *
+     * @param dish_id - Selected dish id
+     * @param transitionImage - For sharedElement transition
+     */
 
     @Override
     public void onClick(String dish_id, View transitionImage) {
@@ -92,6 +106,12 @@ public class MainActivity extends BaseActivity implements IMainView, DishCallbac
                 , 50);
 
     }
+
+
+    /**
+     *
+     * @param iView - Will be send from layout directly
+     */
 
     @Override
     public void onLikeClicked(View iView) {

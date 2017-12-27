@@ -17,26 +17,30 @@ public class ApiClient {
 
     private static Retrofit retrofit = null;
 
-    public static ApiInterface getInterface(){
+    public static ApiInterface getInterface() {
         return getClient().create(ApiInterface.class);
     }
 
     private static Retrofit getClient() {
 
         if (retrofit == null) {
-
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
             retrofit = new Retrofit.Builder()
                     .addConverterFactory(GsonConverterFactory.create())
                     .baseUrl(BaseProject.getInstance().getBaseUrl())
-                    .client(httpClient.build())
+                    .client(getHttpLoggingInterceptor().build())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();
 
         }
         return retrofit;
+    }
+
+
+    private static OkHttpClient.Builder getHttpLoggingInterceptor() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        return new OkHttpClient.Builder();
+
     }
 
 }

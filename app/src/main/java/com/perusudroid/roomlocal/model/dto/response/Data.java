@@ -4,6 +4,7 @@ import android.databinding.BindingAdapter;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.perusudroid.roomlocal.R;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -88,6 +89,8 @@ public class Data {
         Log.d(TAG, "loadImage: "+ imageUrl);
         Picasso.with(view.getContext())
                 .load("http://192.168.43.248/RoomApi/"+imageUrl)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
                 .into(view);
     }
 

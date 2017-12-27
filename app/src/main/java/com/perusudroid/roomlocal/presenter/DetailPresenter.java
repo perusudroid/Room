@@ -26,7 +26,7 @@ import rx.schedulers.Schedulers;
  * Created by perusu on 7/12/17.
  */
 
-public class DetailPresenter extends BasePresenter implements IDetailPresenter{
+public class DetailPresenter extends BasePresenter implements IDetailPresenter {
 
     private IDetailView iDetailView;
     private UserDaoModel userDaoModel;
@@ -42,29 +42,29 @@ public class DetailPresenter extends BasePresenter implements IDetailPresenter{
     @Override
     public void onCreatePresenter(Bundle bundle) {
 
-        if(bundle.getString(Constants.BundleKey.DISH_ID) != null){
+        if (bundle.getString(Constants.BundleKey.DISH_ID) != null) {
 
             mDisposable.add(userDaoModel.getUsersById(bundle.getString(Constants.BundleKey.DISH_ID))
                     .subscribeOn(io.reactivex.schedulers.Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             userModels -> {
-                                    if(userModels.size() > 0){
+                                if (userModels.size() > 0) {
 
-                                        for (int i = 0; i < userModels.size(); i++) {
-                                            Log.d(TAG, "onStartPresenter: " + userModels.get(i).getDish_name());
+                                    for (int i = 0; i < userModels.size(); i++) {
+                                        Log.d(TAG, "onStartPresenter: " + userModels.get(i).getDish_name());
 
-                                            iDetailView.setDishInfoData(userModels);
+                                        iDetailView.setDishInfoData(userModels);
 
-                                        }
-
-                                    }else{
-                                        Log.d(TAG, "onCreatePresenter: no data found!");
                                     }
+
+                                } else {
+                                    Log.d(TAG, "onCreatePresenter: no data found!");
+                                }
                             }
 
                     )
-                    );
+            );
         }
 
     }
@@ -75,13 +75,4 @@ public class DetailPresenter extends BasePresenter implements IDetailPresenter{
         mDisposable.clear();
     }
 
-    @Override
-    public void onSuccessfulApi(String str, int i) {
-
-    }
-
-    @Override
-    public void onFailureApi(Throwable t, int paramInt) {
-
-    }
 }

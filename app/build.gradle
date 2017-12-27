@@ -119,4 +119,6 @@ dependencies {
     androidTestCompile deps.support.v4
     androidTestCompile deps.support.app_compat
     androidTestCompile deps.support.design
+
+    compile 'com.github.Periyanayagam:RxRetro:1.0'
 }

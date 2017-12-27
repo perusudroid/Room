@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.perusudroid.roomlocal.R;
-import com.perusudroid.roomlocal.model.retrofit.RXRetro;
 import com.perusudroid.roomlocal.presenter.ipresenter.IPresenter;
 import com.perusudroid.roomlocal.utils.CodeSnippets;
 import com.perusudroid.roomlocal.view.iview.IView;

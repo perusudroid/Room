@@ -2,7 +2,6 @@ package com.perusudroid.roomlocal.presenter;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.perusudroid.roomlocal.dao.UserDaoModel;
 import com.perusudroid.roomlocal.dao.UserModel;
@@ -11,10 +10,10 @@ import com.perusudroid.roomlocal.model.ObservableUser;
 import com.perusudroid.roomlocal.model.dto.response.Data;
 import com.perusudroid.roomlocal.model.dto.response.DishInfoResponse;
 import com.perusudroid.roomlocal.model.dto.response.Shop_location;
-import com.perusudroid.roomlocal.model.retrofit.IResponseListener;
-import com.perusudroid.roomlocal.model.retrofit.RXRetro;
 import com.perusudroid.roomlocal.presenter.ipresenter.IMainPresenter;
 import com.perusudroid.roomlocal.view.iview.IMainView;
+import com.perusudroid.rxretro.IResponseListener;
+import com.perusudroid.rxretro.RXRetro;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +45,11 @@ public class MainPresenter extends BasePresenter implements IMainPresenter, IRes
 
     @Override
     public void onCreatePresenter(Bundle bundle) {
+
+        /**
+         *  if no internet connection, then get data from localDB else, get data from api
+         */
+
         if (!iMainView.getCodeSnippet().hasNetworkConnection()) {
             doGetLocalDB();
             iMainView.showToast("No network - Showing local db");
@@ -69,10 +73,19 @@ public class MainPresenter extends BasePresenter implements IMainPresenter, IRes
     }
 
     private void doNetworkOperations() {
-        RXRetro.retrofitRxEnque(ApiClient.getInterface().getDishes(), this, 1);
+
+        /**
+         *  Enqueing api task with one line of code
+         *  Refer https://github.com/Periyanayagam/RxRetro for more info on this
+         */
+
+        RXRetro.getInstance().retrofitEnque(ApiClient.getInterface().getDishes(), this, 1);
     }
 
 
+    /**
+     * Getting all data from SQLiteDB and setting in recyclerView
+     */
     private void doGetLocalDB() {
         data.clear();
         mDisposable.add(userDaoModel.getAllUsers()
@@ -99,80 +112,95 @@ public class MainPresenter extends BasePresenter implements IMainPresenter, IRes
 
 
     @Override
-    public void onFailureApi(Throwable t, int paramInt) {
-        iMainView.showToast(t.getLocalizedMessage() + " Showing local DB");
-        doGetLocalDB();
-    }
-
-    @Override
-    public void onSuccessfulApi(String str, int type) {
-
-        data.clear();
-
-        DishInfoResponse dishes = iMainView.getGson().fromJson(str, DishInfoResponse.class);
-        UserModel[] users = new UserModel[dishes.getData().size()];
-
-        for (int i = 0; i < users.length; i++) {
-
-            UserModel user =
-                    new UserModel(dishes.getData().get(i).getDish_id(),
-                            dishes.getData().get(i).getDish_shop(),
-                            dishes.getData().get(i).getShop_id(),
-                            dishes.getData().get(i).getDish_type(),
-                            dishes.getData().get(i).getDish_expiration(),
-                            dishes.getData().get(i).getShop_location().getLat(),
-                            dishes.getData().get(i).getShop_location().getLng(),
-                            dishes.getData().get(i).getShop_name(),
-                            dishes.getData().get(i).getShop_address(),
-                            dishes.getData().get(i).getDish_name(),
-                            dishes.getData().get(i).getShop_mobile().toString(),
-                            dishes.getData().get(i).getShop_timing(),
-                            dishes.getData().get(i).getShop_address(),
-                            dishes.getData().get(i).getDish_description(),
-                            dishes.getData().get(i).getDish_pic()
-                    );
-            users[i] = user;
-        }
-
-
-        mDisposable.add(userDaoModel.deleteAll()
-                .andThen(userDaoModel.inserUser(users))
-                .andThen(userDaoModel.getAllUsers())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        UsersfromDb -> {
-                            Log.d(TAG, "onStart: " + UsersfromDb.size());
-                            if (UsersfromDb.size() > 0) {
-
-                                observeList = new ArrayList<>();
-                                for (int i = 0; i < UsersfromDb.size(); i++) {
-                                    observeList.add(new ObservableUser());
-
-                                    Shop_location shop_location = new Shop_location(UsersfromDb.get(i).getLat(), UsersfromDb.get(i).getLng());
-
-                                    data.add(new Data(UsersfromDb.get(i).getDish_id(), UsersfromDb.get(i).getDish_expiration(), shop_location,
-                                            UsersfromDb.get(i).getDish_name(), UsersfromDb.get(i).getShop_name(),
-                                            UsersfromDb.get(i).getShop_address(), UsersfromDb.get(i).getShop_detail_address(),
-                                            UsersfromDb.get(i).getDish_pic()));
-
-                                    iMainView.refreshRecyclerData(data);
-
-                                }
-                            }
-
-                        }
-                )
-        );
-
-    }
-
-    @Override
     public void doFetchApiData() {
         if (!iMainView.getCodeSnippet().hasNetworkConnection()) {
             doGetLocalDB();
         } else {
             doNetworkOperations();
         }
+    }
+
+
+    /*
+     On SucessfulApi Response, Clearing SQLiteDB and storing new data fetched from API
+     and then getting all data from DB and showing in recycler view
+     */
+
+    @Override
+    public void onSuccess(String str, int requestId) {
+
+        switch (requestId) {
+            case 1:
+
+                data.clear();
+
+                DishInfoResponse dishes = iMainView.getGson().fromJson(str, DishInfoResponse.class);
+                UserModel[] users = new UserModel[dishes.getData().size()];
+
+                for (int i = 0; i < users.length; i++) {
+
+                    UserModel user =
+                            new UserModel(dishes.getData().get(i).getDish_id(),
+                                    dishes.getData().get(i).getDish_shop(),
+                                    dishes.getData().get(i).getShop_id(),
+                                    dishes.getData().get(i).getDish_type(),
+                                    dishes.getData().get(i).getDish_expiration(),
+                                    dishes.getData().get(i).getShop_location().getLat(),
+                                    dishes.getData().get(i).getShop_location().getLng(),
+                                    dishes.getData().get(i).getShop_name(),
+                                    dishes.getData().get(i).getShop_address(),
+                                    dishes.getData().get(i).getDish_name(),
+                                    dishes.getData().get(i).getShop_mobile().toString(),
+                                    dishes.getData().get(i).getShop_timing(),
+                                    dishes.getData().get(i).getShop_address(),
+                                    dishes.getData().get(i).getDish_description(),
+                                    dishes.getData().get(i).getDish_pic()
+                            );
+                    users[i] = user;
+                }
+
+
+                mDisposable.add(userDaoModel.deleteAll()
+                        .andThen(userDaoModel.inserUser(users))
+                        .andThen(userDaoModel.getAllUsers())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                UsersfromDb -> {
+                                    Log.d(TAG, "onStart: " + UsersfromDb.size());
+                                    if (UsersfromDb.size() > 0) {
+
+                                        observeList = new ArrayList<>();
+                                        for (int i = 0; i < UsersfromDb.size(); i++) {
+                                            observeList.add(new ObservableUser());
+
+                                            Shop_location shop_location = new Shop_location(UsersfromDb.get(i).getLat(), UsersfromDb.get(i).getLng());
+
+                                            data.add(new Data(UsersfromDb.get(i).getDish_id(), UsersfromDb.get(i).getDish_expiration(), shop_location,
+                                                    UsersfromDb.get(i).getDish_name(), UsersfromDb.get(i).getShop_name(),
+                                                    UsersfromDb.get(i).getShop_address(), UsersfromDb.get(i).getShop_detail_address(),
+                                                    UsersfromDb.get(i).getDish_pic()));
+
+                                            iMainView.refreshRecyclerData(data);
+
+                                        }
+                                    }
+
+                                }
+                        )
+                );
+                break;
+        }
+
+    }
+
+    /*
+      onFailure API response, if data exists in localDB then show it.
+     */
+
+    @Override
+    public void onFailure(Throwable throwable, int i) {
+        iMainView.showToast(throwable.getLocalizedMessage() + " Showing local DB");
+        doGetLocalDB();
     }
 }

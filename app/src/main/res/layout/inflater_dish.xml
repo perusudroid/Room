@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<layout
-
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools">
 
 
     <data>
 
+        <!-- DishInflaterData class holds the value to be binded
+            with the views below-->
         <variable
             name="DishInflaterData"
             type="com.perusudroid.roomlocal.model.dto.response.Data" />
+
+        <!-- Using callback, layouts can directly interact with the adapter  -->
 
         <variable
             name="callback"
@@ -24,7 +26,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
 
         <android.support.v7.widget.CardView
             android:id="@+id/card_view_item_recycler_view"
@@ -48,12 +49,12 @@
                     android:foreground="?attr/selectableItemBackground">
 
 
+                    <!-- To set pics, we need to add some more lines in pojo  -->
                     <ImageView
                         android:id="@+id/ivBanner"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:fitsSystemWindows="true"
-                        android:scaleType="fitCenter"
                         app:dish_pic="@{DishInflaterData.dish_pic}"
                         app:layout_collapseMode="parallax" />
 
@@ -114,6 +115,7 @@
                         android:gravity="center"
                         android:orientation="horizontal">
 
+                        <!-- Using callback interface, triggering method overridden in adapter -->
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -166,6 +168,9 @@
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:background="@color/viewColor" />
+
+
+                    <!-- Navigate and Share is set only for UI. No functionality -->
 
                     <LinearLayout
                         android:layout_width="0dp"

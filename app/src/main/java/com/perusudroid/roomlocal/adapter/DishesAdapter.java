@@ -24,20 +24,16 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesView
     private List<Data> oldData;
     private DishCallback dishCallback;
 
-    public DishesAdapter(DishCallback dishCallback) {
-        this.dishCallback = dishCallback;
-    }
-
     public DishesAdapter(List<Data> newData, DishCallback dishCallback) {
         this.oldData = newData;
         this.dishCallback = dishCallback;
     }
 
-    public void setDishList(final List<Data> newData) {
 
-        for (int i = 0; i < newData.size(); i++) {
-            Log.d(TAG, "setDishList: " + newData.get(0));
-        }
+    /*
+        New way of refreshing adapter based on data
+     */
+    public void setDishList(final List<Data> newData) {
 
         if (oldData == null) {
             oldData = newData;
@@ -75,9 +71,11 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesView
     @Override
     public DishesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
+        // inflating layout with DataBindingUtil
         InflaterDishBinding binding = DataBindingUtil
                 .inflate(LayoutInflater.from(parent.getContext()), R.layout.inflater_dish,
                         parent, false);
+        //onClick is for the ripple effect
         binding.getRoot().setOnClickListener(this);
         binding.setCallback(dishCallback);
         return new DishesViewHolder(binding);
@@ -86,8 +84,10 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesView
 
     @Override
     public void onBindViewHolder(DishesViewHolder holder, int position) {
+        /*
+        As we use DataBinding, not required to set text for each view.
+         */
         Data myData = oldData.get(position);
-        Log.d(TAG, "onBindViewHolder: " + myData.getDish_pic());
         holder.inflaterDishBinding.setDishInflaterData(myData);
         holder.inflaterDishBinding.executePendingBindings();
         holder.itemView.setTag(myData);
@@ -102,9 +102,6 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesView
     public void onClick(View view) {
 
         Data myData = (Data) view.getTag();
-
-        Log.d(TAG, "onClick: " + myData.getDish_id());
-
         dishCallback.onClick(myData.getDish_id().toString(), view);
     }
 
@@ -115,6 +112,11 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesView
         public DishesViewHolder(InflaterDishBinding binding) {
             super(binding.getRoot());
             this.inflaterDishBinding = binding;
+
+            /*
+            As we use DataBinding, not required to inflate view and so reduced lot of code!
+            */
+
         }
 
     }

@@ -247,4 +247,9 @@ public class DetailsActivity extends BaseActivity implements
         moveMap();
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

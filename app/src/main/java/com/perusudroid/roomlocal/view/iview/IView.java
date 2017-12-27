@@ -1,7 +1,6 @@
 package com.perusudroid.roomlocal.view.iview;
 
 import com.google.gson.Gson;
-import com.perusudroid.roomlocal.model.retrofit.RXRetro;
 import com.perusudroid.roomlocal.presenter.ipresenter.IPresenter;
 import com.perusudroid.roomlocal.utils.CodeSnippets;
 

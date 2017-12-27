@@ -25,11 +25,6 @@ public class BaseProject extends Application {
 
     }
 
-
-    public ConnectivityManager getConnectivityManager() {
-        return (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-    }
-
     @NonNull
     public String getBaseUrl(){
         try {
