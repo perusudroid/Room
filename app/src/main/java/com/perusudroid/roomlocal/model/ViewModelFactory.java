@@ -3,8 +3,8 @@ package com.perusudroid.roomlocal.model;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
-import com.perusudroid.roomlocal.dao.UserDaoModel;
-import com.perusudroid.roomlocal.datasource.IUserDataSource;
+import com.perusudroid.roomlocal.dao.DishDaoModel;
+import com.perusudroid.roomlocal.datasource.IDishDataSource;
 
 /**
  * Created by perusu on 11/11/17.
@@ -12,16 +12,16 @@ import com.perusudroid.roomlocal.datasource.IUserDataSource;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
-    private final IUserDataSource mIUserDataSource;
+    private final IDishDataSource mIDishDataSource;
 
-    public ViewModelFactory(IUserDataSource mIUserDataSource) {
-        this.mIUserDataSource = mIUserDataSource;
+    public ViewModelFactory(IDishDataSource mIDishDataSource) {
+        this.mIDishDataSource = mIDishDataSource;
     }
 
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(UserDaoModel.class)) {
-            return (T) new UserDaoModel(mIUserDataSource);
+        if (modelClass.isAssignableFrom(DishDaoModel.class)) {
+            return (T) new DishDaoModel(mIDishDataSource);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

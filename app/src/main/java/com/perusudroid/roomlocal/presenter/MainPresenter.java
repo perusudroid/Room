@@ -3,8 +3,8 @@ package com.perusudroid.roomlocal.presenter;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.perusudroid.roomlocal.dao.UserDaoModel;
-import com.perusudroid.roomlocal.dao.UserModel;
+import com.perusudroid.roomlocal.dao.DishDaoModel;
+import com.perusudroid.roomlocal.dao.DishModel;
 import com.perusudroid.roomlocal.model.ApiClient;
 import com.perusudroid.roomlocal.model.ObservableUser;
 import com.perusudroid.roomlocal.model.dto.response.Data;
@@ -29,17 +29,17 @@ import io.reactivex.schedulers.Schedulers;
 public class MainPresenter extends BasePresenter implements IMainPresenter, IResponseListener {
 
     private IMainView iMainView;
-    private UserDaoModel userDaoModel;
+    private DishDaoModel dishDaoModel;
     private List<Data> data = new ArrayList<>();
     private ArrayList<ObservableUser> observeList;
 
     private final CompositeDisposable mDisposable = new CompositeDisposable();
 
 
-    public MainPresenter(IMainView iMainView, UserDaoModel userDaoModel) {
+    public MainPresenter(IMainView iMainView, DishDaoModel dishDaoModel) {
         super(iMainView);
         this.iMainView = iMainView;
-        this.userDaoModel = userDaoModel;
+        this.dishDaoModel = dishDaoModel;
     }
 
 
@@ -88,7 +88,7 @@ public class MainPresenter extends BasePresenter implements IMainPresenter, IRes
      */
     private void doGetLocalDB() {
         data.clear();
-        mDisposable.add(userDaoModel.getAllUsers()
+        mDisposable.add(dishDaoModel.getAllUsers()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -135,12 +135,12 @@ public class MainPresenter extends BasePresenter implements IMainPresenter, IRes
                 data.clear();
 
                 DishInfoResponse dishes = iMainView.getGson().fromJson(str, DishInfoResponse.class);
-                UserModel[] users = new UserModel[dishes.getData().size()];
+                DishModel[] users = new DishModel[dishes.getData().size()];
 
                 for (int i = 0; i < users.length; i++) {
 
-                    UserModel user =
-                            new UserModel(dishes.getData().get(i).getDish_id(),
+                    DishModel user =
+                            new DishModel(dishes.getData().get(i).getDish_id(),
                                     dishes.getData().get(i).getDish_shop(),
                                     dishes.getData().get(i).getShop_id(),
                                     dishes.getData().get(i).getDish_type(),
@@ -160,9 +160,9 @@ public class MainPresenter extends BasePresenter implements IMainPresenter, IRes
                 }
 
 
-                mDisposable.add(userDaoModel.deleteAll()
-                        .andThen(userDaoModel.inserUser(users))
-                        .andThen(userDaoModel.getAllUsers())
+                mDisposable.add(dishDaoModel.deleteAll()
+                        .andThen(dishDaoModel.inserUser(users))
+                        .andThen(dishDaoModel.getAllUsers())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(

@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.perusudroid.roomlocal.R;
 import com.perusudroid.roomlocal.adapter.DishesAdapter;
 import com.perusudroid.roomlocal.adapter.listener.DishCallback;
-import com.perusudroid.roomlocal.dao.UserDaoModel;
+import com.perusudroid.roomlocal.dao.DishDaoModel;
 import com.perusudroid.roomlocal.databinding.ActivityLaunchBinding;
 import com.perusudroid.roomlocal.db.InjectDB;
 import com.perusudroid.roomlocal.model.ViewModelFactory;
@@ -35,7 +35,7 @@ public class MainActivity extends BaseActivity implements IMainView, DishCallbac
     private ActivityLaunchBinding activityLaunchBinding;
     private IMainPresenter iMainPresenter;
     private ViewModelFactory mViewModelFactory;
-    private UserDaoModel userDaoModel;
+    private DishDaoModel dishDaoModel;
     private DishesAdapter dishesAdapter;
     private boolean isFavoriteClicked = false;
     private AlphaAnimation alphaAnimation, alphaAnimationShowIcon;
@@ -51,13 +51,13 @@ public class MainActivity extends BaseActivity implements IMainView, DishCallbac
         setAssets();
         configureRoom();
         //initializing presenter
-        iMainPresenter = new MainPresenter(this, userDaoModel);
+        iMainPresenter = new MainPresenter(this, dishDaoModel);
         iMainPresenter.onCreatePresenter(getIntent().getExtras());
     }
 
     private void configureRoom() {
         mViewModelFactory = InjectDB.provideViewModelFactory(this);
-        userDaoModel = ViewModelProviders.of(this, mViewModelFactory).get(UserDaoModel.class);
+        dishDaoModel = ViewModelProviders.of(this, mViewModelFactory).get(DishDaoModel.class);
     }
 
 

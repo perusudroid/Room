@@ -1,6 +1,6 @@
 package com.perusudroid.roomlocal.view.iview;
 
-import com.perusudroid.roomlocal.dao.UserModel;
+import com.perusudroid.roomlocal.dao.DishModel;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ import java.util.List;
 public interface IDetailView extends IView{
 
 
-    void setDishInfoData(List<UserModel> data);
+    void setDishInfoData(List<DishModel> data);
 }

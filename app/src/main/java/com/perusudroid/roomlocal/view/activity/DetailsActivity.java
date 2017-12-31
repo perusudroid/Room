@@ -32,8 +32,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.perusudroid.roomlocal.R;
 import com.perusudroid.roomlocal.common.Constants;
-import com.perusudroid.roomlocal.dao.UserDaoModel;
-import com.perusudroid.roomlocal.dao.UserModel;
+import com.perusudroid.roomlocal.dao.DishDaoModel;
+import com.perusudroid.roomlocal.dao.DishModel;
 import com.perusudroid.roomlocal.databinding.ActivityDetailsBinding;
 import com.perusudroid.roomlocal.db.InjectDB;
 import com.perusudroid.roomlocal.model.ViewModelFactory;
@@ -61,7 +61,7 @@ public class DetailsActivity extends BaseActivity implements
     private static String dishId;
     private GoogleApiClient googleApiClient;
     private IDetailPresenter iDetailPresenter;
-    private UserDaoModel userDaoModel;
+    private DishDaoModel dishDaoModel;
     private ViewModelFactory mViewModelFactory;
 
     private ActivityDetailsBinding activityDetailsBinding;
@@ -85,8 +85,8 @@ public class DetailsActivity extends BaseActivity implements
         setAssets();
 
         mViewModelFactory = InjectDB.provideViewModelFactory(this);
-        userDaoModel = ViewModelProviders.of(this, mViewModelFactory).get(UserDaoModel.class);
-        iDetailPresenter = new DetailPresenter(this, userDaoModel);
+        dishDaoModel = ViewModelProviders.of(this, mViewModelFactory).get(DishDaoModel.class);
+        iDetailPresenter = new DetailPresenter(this, dishDaoModel);
         Bundle b = new Bundle();
         b.putString(Constants.BundleKey.DISH_ID, dishId);
         iDetailPresenter.onCreatePresenter(b);
@@ -234,7 +234,7 @@ public class DetailsActivity extends BaseActivity implements
     }
 
     @Override
-    public void setDishInfoData(List<UserModel> data) {
+    public void setDishInfoData(List<DishModel> data) {
 
         setPic(data.get(0).getDish_pic());
         activityDetailsBinding.txtDesc.setText(data.get(0).getDish_description());

@@ -3,7 +3,6 @@ package com.perusudroid.roomlocal.adapter;
 import android.databinding.DataBindingUtil;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +11,8 @@ import com.perusudroid.roomlocal.R;
 import com.perusudroid.roomlocal.adapter.listener.DishCallback;
 import com.perusudroid.roomlocal.databinding.InflaterDishBinding;
 import com.perusudroid.roomlocal.model.dto.response.Data;
-import com.perusudroid.roomlocal.view.activity.MainActivity;
 
 import java.util.List;
-import java.util.Objects;
-
-import static android.content.ContentValues.TAG;
 
 public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.DishesViewHolder> implements View.OnClickListener {
 

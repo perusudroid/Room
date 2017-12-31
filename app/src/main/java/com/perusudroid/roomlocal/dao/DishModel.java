@@ -12,8 +12,8 @@ import java.util.UUID;
  * Created by perusu on 11/11/17.
  */
 
-@Entity(tableName = "users")
-public class UserModel {
+@Entity(tableName = "dishes")
+public class DishModel {
 
     @NonNull
     @PrimaryKey
@@ -48,11 +48,11 @@ public class UserModel {
     @ColumnInfo(name = "dish_description")
     private String dish_description;
 
-    public UserModel() {
+    public DishModel() {
     }
 
-    public UserModel(@NonNull int _id, int dish_shop, int shop_id, String dish_type, String dish_expiration,
-                     String lat,String lng, String shop_name, String shop_address, String dish_name,
+    public DishModel(@NonNull int _id, int dish_shop, int shop_id, String dish_type, String dish_expiration,
+                     String lat, String lng, String shop_name, String shop_address, String dish_name,
                      String shop_mobile, String shop_timing, String shop_detail_address, String dish_description, String dish_pic) {
         this.dish_id = _id;
         this.dish_shop = dish_shop;

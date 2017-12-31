@@ -4,8 +4,6 @@ import android.databinding.BaseObservable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.perusudroid.roomlocal.BR;
-
 /**
  * Created by perusu on 5/11/17.
  */

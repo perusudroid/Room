@@ -2,8 +2,8 @@ package com.perusudroid.roomlocal.db;
 
 import android.content.Context;
 
-import com.perusudroid.roomlocal.datasource.IUserDataSource;
-import com.perusudroid.roomlocal.datasource.UserDataSource;
+import com.perusudroid.roomlocal.datasource.DishDataSource;
+import com.perusudroid.roomlocal.datasource.IDishDataSource;
 import com.perusudroid.roomlocal.model.ViewModelFactory;
 
 /**
@@ -12,13 +12,13 @@ import com.perusudroid.roomlocal.model.ViewModelFactory;
 
 public class InjectDB {
 
-    public static IUserDataSource provideUserDataSource(Context context) {
-        UserDB database = UserDB.getInstance(context);
-        return new UserDataSource(database.iuserDao());
+    public static IDishDataSource provideUserDataSource(Context context) {
+        DishDB database = DishDB.getInstance(context);
+        return new DishDataSource(database.iuserDao());
     }
 
     public static ViewModelFactory provideViewModelFactory(Context context) {
-        IUserDataSource dataSource = provideUserDataSource(context);
+        IDishDataSource dataSource = provideUserDataSource(context);
         return new ViewModelFactory(dataSource);
     }
 }

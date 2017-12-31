@@ -5,7 +5,7 @@ package com.perusudroid.roomlocal.datasource;
  */
 
 
-import com.perusudroid.roomlocal.dao.UserModel;
+import com.perusudroid.roomlocal.dao.DishModel;
 
 import java.util.List;
 
@@ -14,14 +14,14 @@ import io.reactivex.Flowable;
 /**
  * Access point for managing user data.
  */
-public interface IUserDataSource {
+public interface IDishDataSource {
 
     /**
      * Gets the user from the data source.
      *
      * @return the user from the data source.
      */
-    Flowable<UserModel> getUser();
+    Flowable<DishModel> getDish();
 
 
     /**
@@ -29,7 +29,7 @@ public interface IUserDataSource {
      *
      * @return the user from the data source in list
      */
-    Flowable<List<UserModel>> getAllUser();
+    Flowable<List<DishModel>> getAllDish();
 
 
     /**
@@ -37,7 +37,7 @@ public interface IUserDataSource {
      * @param dish_id - based on id , data will be fetched
      * @return the user from the data source in list based on
      */
-    Flowable<List<UserModel>> getUserByDishId(String dish_id);
+    Flowable<List<DishModel>> getDishById(String dish_id);
 
 
     /**
@@ -45,7 +45,7 @@ public interface IUserDataSource {
      *
      * @param user the user to be inserted
      */
-    void insertUsers(UserModel... user);
+    void insertUsers(DishModel... user);
 
 
     /**
@@ -53,11 +53,11 @@ public interface IUserDataSource {
      *
      * @param user the user to be inserted or updated.
      */
-    void insertOrUpdateUser(UserModel user);
+    void insertOrUpdateDish(DishModel user);
 
 
     /**
      * Deletes all users from the data source.
      */
-    void deleteAllUsers();
+    void deleteAllDish();
 }
